@@ -1,95 +1,93 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#0f172a">
-  <title>Sistema de Asistencia QR - Primaria</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <title>Asistencia QR | I.E. 5074 Alcides Spelucín Vega</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand-mark">QR</div>
-    <div>
-      <div class="brand-title">SISTEMA DE ASISTENCIA QR</div>
-      <div class="brand-subtitle">Nivel Primaria</div>
-    </div>
-    <span class="connection-pill" id="connectionStatus">Backend pendiente de configurar</span>
-  </header>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Inicio">
+        <span class="brand-mark">A</span>
+        <span><strong>I.E. 5074</strong><small>ALCIDES SPELUCÍN VEGA</small></span>
+      </a>
+      <div class="topbar-right"><span class="live-dot"></span><span>PLATAFORMA DE ASISTENCIA</span></div>
+    </header>
 
-  <main class="page">
-    <section class="welcome">
-      <p class="eyebrow">CONTROL ESCOLAR</p>
-      <h1>Bienvenido al sistema</h1>
-      <p>Registro de asistencia de estudiantes mediante códigos QR.</p>
-    </section>
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span></span> CONTROL ESCOLAR DIGITAL</div>
+        <h1>Sistema de <em>Asistencia QR</em></h1>
+        <p class="hero-sub">Institución Educativa 5074 Alcides Spelucín Vega</p>
+        <p class="hero-note">Registro y seguimiento de asistencia de estudiantes de educación primaria.</p>
+      </section>
 
-    <section class="notice" role="status">
-      <strong>Versión inicial de instalación</strong>
-      <p>La interfaz y el servidor base están preparados. Antes de registrar asistencia se debe configurar y probar la conexión segura con Google Apps Script. No se habilitan credenciales de demostración ni se exponen datos de estudiantes.</p>
-    </section>
-
-    <section class="panel-grid">
-      <article class="panel">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">MÓDULO DE REGISTRO</p>
-            <h2>Escanear código QR</h2>
-          </div>
-          <span class="status-dot"></span>
-        </div>
-        <p class="muted">El escáner se activará cuando se configure la conexión con el servidor.</p>
-        <div class="scanner-placeholder">
-          <span class="scanner-icon">▦</span>
-          <span>Escáner QR pendiente de conexión</span>
-        </div>
-        <button class="button button-primary" id="startScanner" disabled>Activar cámara y escanear</button>
-        <div id="reader" class="reader" hidden></div>
-        <div class="result-card" id="scanResult" aria-live="polite">
-          <div class="result-avatar">QR</div>
-          <div>
-            <strong id="studentName">Esperando conexión</strong>
-            <p id="studentInfo">Aquí aparecerá el resultado de un escaneo autorizado.</p>
-            <span id="attendanceState" class="state-label">SIN REGISTRO</span>
-          </div>
-        </div>
-        <p id="scanMessage" class="message" aria-live="polite"></p>
-      </article>
-
-      <article class="panel">
-        <p class="eyebrow">ACCESO AL SISTEMA</p>
-        <h2>Administración y docentes</h2>
-        <p class="muted">El inicio de sesión se conectará a la validación del servidor. No escribas contraseñas reales en esta versión inicial.</p>
-        <form id="loginForm" autocomplete="off">
-          <label for="username">Usuario</label>
-          <input id="username" name="username" type="text" placeholder="Usuario institucional" disabled>
-          <label for="password">Contraseña</label>
-          <input id="password" name="password" type="password" placeholder="Contraseña" disabled>
-          <button class="button button-disabled" type="submit" disabled>Ingresar</button>
-        </form>
-        <div class="role-list">
-          <div><span class="role-icon">A</span><span><strong>Administrador</strong><small>Gestión general y reportes</small></span></div>
-          <div><span class="role-icon">D</span><span><strong>Docente</strong><small>Sus secciones y asistencia</small></span></div>
-        </div>
-      </article>
-    </section>
-
-    <section class="panel">
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow">BASE DE DATOS</p>
-          <h2>Componentes del sistema</h2>
-        </div>
+      <div class="notice" role="status">
+        <span class="notice-icon">i</span>
+        <div><strong>Entorno de configuración</strong><p>La interfaz está preparada. El registro real se habilitará después de validar la conexión protegida con Google Apps Script y los permisos institucionales.</p></div>
+        <span class="status-chip">CONFIGURACIÓN</span>
       </div>
-      <div class="sheet-list">
-        <span>ALUMNOS</span><span>DOCENTES</span><span>ASISTENCIA</span><span>USUARIOS</span><span>CONFIGURACIÓN</span>
-      </div>
-      <p class="muted small">El sistema conserva la estructura de las cinco pestañas ya creadas en Google Sheets. La clasificación de asistencia/tardanza/falta requiere definir y aprobar el horario institucional antes de activarse.</p>
-    </section>
 
-    <footer>© Sistema de Asistencia QR · Primaria</footer>
-  </main>
+      <section class="main-grid">
+        <article class="panel scanner-panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">MÓDULO 01</span><h2>Escanear código QR</h2><p>Identificación rápida del estudiante</p></div>
+            <span class="heading-icon">▦</span>
+          </div>
+          <div class="scanner-frame">
+            <div class="scan-corner c1"></div><div class="scan-corner c2"></div>
+            <div class="scan-corner c3"></div><div class="scan-corner c4"></div>
+            <div id="reader-placeholder" class="scanner-placeholder">
+              <div class="qr-symbol">▦</div>
+              <strong>Escáner pendiente de conexión</strong>
+              <span>La cámara se activará cuando se complete la integración segura.</span>
+            </div>
+            <div id="reader" class="reader" hidden></div>
+          </div>
+          <button id="scan-button" class="btn btn-primary" disabled>Activar cámara y escanear</button>
+          <div class="result-card" aria-live="polite">
+            <div class="result-avatar" id="avatar">QR</div>
+            <div class="result-copy"><span class="section-kicker">RESULTADO DEL ESCANEO</span><strong id="nombre">Esperando conexión</strong><p id="mensaje">Aquí aparecerán los datos autorizados del estudiante.</p></div>
+            <span class="result-state" id="estado">SIN REGISTRO</span>
+          </div>
+          <p class="helper-text">La cámara requiere permiso del navegador y conexión HTTPS.</p>
+        </article>
+
+        <article class="panel access-panel">
+          <div class="panel-heading">
+            <div><span class="section-kicker">MÓDULO 02</span><h2>Acceso al sistema</h2><p>Administración y personal docente</p></div>
+            <span class="heading-icon">⌑</span>
+          </div>
+          <form id="login-form">
+            <label for="usuario">Usuario institucional</label>
+            <input id="usuario" name="usuario" autocomplete="username" placeholder="Ingrese su usuario" disabled>
+            <label for="clave">Contraseña</label>
+            <input id="clave" name="clave" type="password" autocomplete="current-password" placeholder="Ingrese su contraseña" disabled>
+            <button class="btn btn-secondary" type="submit" disabled>Ingresar al sistema</button>
+          </form>
+          <div class="role-list">
+            <div class="role-item"><span class="role-badge admin">A</span><div><strong>Administrador</strong><small>Gestión general, reportes y configuración</small></div></div>
+            <div class="role-item"><span class="role-badge teacher">D</span><div><strong>Docente</strong><small>Consulta de su sección y asistencia</small></div></div>
+          </div>
+          <div class="secure-note"><span>◆</span> El inicio de sesión se habilitará con validación del lado del servidor. No se utilizan contraseñas de demostración.</div>
+        </article>
+      </section>
+
+      <section class="panel data-panel">
+        <div class="panel-heading"><div><span class="section-kicker">MÓDULO 03</span><h2>Base de datos institucional</h2><p>Estructura conectada a Google Sheets</p></div></div>
+        <div class="data-tags"><span>ALUMNOS</span><span>DOCENTES</span><span>ASISTENCIA</span><span>USUARIOS</span><span>CONFIGURACIÓN</span></div>
+        <p class="data-caption">La base contempla 395 estudiantes distribuidos en 18 secciones. Los datos personales permanecen en la hoja institucional y no se publican en esta página.</p>
+      </section>
+      <footer><span>© I.E. 5074 Alcides Spelucín Vega</span><span>Sistema de Asistencia QR · Educación Primaria</span></footer>
+    </main>
+  </div>
 </body>
 </html>

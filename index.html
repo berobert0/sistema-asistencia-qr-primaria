@@ -2,17 +2,94 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f172a">
   <title>Sistema de Asistencia QR - Primaria</title>
-<link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/html5-qrcode" defer></script>
+  <script src="app.js" defer></script>
 </head>
 <body>
+  <header class="topbar">
+    <div class="brand-mark">QR</div>
+    <div>
+      <div class="brand-title">SISTEMA DE ASISTENCIA QR</div>
+      <div class="brand-subtitle">Nivel Primaria</div>
+    </div>
+    <span class="connection-pill" id="connectionStatus">Backend pendiente de configurar</span>
+  </header>
 
-  <h1>SISTEMA DE ASISTENCIA QR</h1>
-  <h2>Institución Educativa - Nivel Primaria</h2>
+  <main class="page">
+    <section class="welcome">
+      <p class="eyebrow">CONTROL ESCOLAR</p>
+      <h1>Bienvenido al sistema</h1>
+      <p>Registro de asistencia de estudiantes mediante códigos QR.</p>
+    </section>
 
-<p>Bienvenido al sistema de control de asistencia.</p>
+    <section class="notice" role="status">
+      <strong>Versión inicial de instalación</strong>
+      <p>La interfaz y el servidor base están preparados. Antes de registrar asistencia se debe configurar y probar la conexión segura con Google Apps Script. No se habilitan credenciales de demostración ni se exponen datos de estudiantes.</p>
+    </section>
 
-<script src="app.js"></script>
+    <section class="panel-grid">
+      <article class="panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">MÓDULO DE REGISTRO</p>
+            <h2>Escanear código QR</h2>
+          </div>
+          <span class="status-dot"></span>
+        </div>
+        <p class="muted">El escáner se activará cuando se configure la conexión con el servidor.</p>
+        <div class="scanner-placeholder">
+          <span class="scanner-icon">▦</span>
+          <span>Escáner QR pendiente de conexión</span>
+        </div>
+        <button class="button button-primary" id="startScanner" disabled>Activar cámara y escanear</button>
+        <div id="reader" class="reader" hidden></div>
+        <div class="result-card" id="scanResult" aria-live="polite">
+          <div class="result-avatar">QR</div>
+          <div>
+            <strong id="studentName">Esperando conexión</strong>
+            <p id="studentInfo">Aquí aparecerá el resultado de un escaneo autorizado.</p>
+            <span id="attendanceState" class="state-label">SIN REGISTRO</span>
+          </div>
+        </div>
+        <p id="scanMessage" class="message" aria-live="polite"></p>
+      </article>
+
+      <article class="panel">
+        <p class="eyebrow">ACCESO AL SISTEMA</p>
+        <h2>Administración y docentes</h2>
+        <p class="muted">El inicio de sesión se conectará a la validación del servidor. No escribas contraseñas reales en esta versión inicial.</p>
+        <form id="loginForm" autocomplete="off">
+          <label for="username">Usuario</label>
+          <input id="username" name="username" type="text" placeholder="Usuario institucional" disabled>
+          <label for="password">Contraseña</label>
+          <input id="password" name="password" type="password" placeholder="Contraseña" disabled>
+          <button class="button button-disabled" type="submit" disabled>Ingresar</button>
+        </form>
+        <div class="role-list">
+          <div><span class="role-icon">A</span><span><strong>Administrador</strong><small>Gestión general y reportes</small></span></div>
+          <div><span class="role-icon">D</span><span><strong>Docente</strong><small>Sus secciones y asistencia</small></span></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">BASE DE DATOS</p>
+          <h2>Componentes del sistema</h2>
+        </div>
+      </div>
+      <div class="sheet-list">
+        <span>ALUMNOS</span><span>DOCENTES</span><span>ASISTENCIA</span><span>USUARIOS</span><span>CONFIGURACIÓN</span>
+      </div>
+      <p class="muted small">El sistema conserva la estructura de las cinco pestañas ya creadas en Google Sheets. La clasificación de asistencia/tardanza/falta requiere definir y aprobar el horario institucional antes de activarse.</p>
+    </section>
+
+    <footer>© Sistema de Asistencia QR · Primaria</footer>
+  </main>
 </body>
 </html>

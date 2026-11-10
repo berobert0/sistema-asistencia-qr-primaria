@@ -1,93 +1,112 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#07111f">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1424">
   <title>Asistencia QR | I.E. 5074 Alcides Spelucín Vega</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
-  <div class="app-shell">
-    <header class="topbar">
-      <a class="brand" href="#" aria-label="Inicio">
-        <span class="brand-mark">A</span>
-        <span><strong>I.E. 5074</strong><small>ALCIDES SPELUCÍN VEGA</small></span>
-      </a>
-      <div class="topbar-right"><span class="live-dot"></span><span>PLATAFORMA DE ASISTENCIA</span></div>
-    </header>
-
-    <main>
-      <section class="hero">
-        <div class="eyebrow"><span></span> CONTROL ESCOLAR DIGITAL</div>
-        <h1>Sistema de <em>Asistencia QR</em></h1>
-        <p class="hero-sub">Institución Educativa 5074 Alcides Spelucín Vega</p>
-        <p class="hero-note">Registro y seguimiento de asistencia de estudiantes de educación primaria.</p>
-      </section>
-
-      <div class="notice" role="status">
-        <span class="notice-icon">i</span>
-        <div><strong>Entorno de configuración</strong><p>La interfaz está preparada. El registro real se habilitará después de validar la conexión protegida con Google Apps Script y los permisos institucionales.</p></div>
-        <span class="status-chip">CONFIGURACIÓN</span>
+  <div id="loginView" class="login-screen">
+    <div class="login-art">
+      <div class="brand brand-large"><div class="brand-mark">A</div><div><b>ASISTENCIA QR</b><span>GESTIÓN ESCOLAR</span></div></div>
+      <div class="login-message">
+        <span class="eyebrow">PLATAFORMA INSTITUCIONAL</span>
+        <h1>Control de asistencia<br><em>más simple y ordenado.</em></h1>
+        <p>Una herramienta para acompañar la asistencia diaria de nuestros estudiantes.</p>
       </div>
+      <div class="login-foot">I.E. 5074 Alcides Spelucín Vega · Nivel Primaria</div>
+    </div>
+    <div class="login-panel">
+      <div class="login-card">
+        <div class="mobile-brand brand"><div class="brand-mark">A</div><div><b>ASISTENCIA QR</b><span>GESTIÓN ESCOLAR</span></div></div>
+        <span class="eyebrow">BIENVENIDO/A</span>
+        <h2>Iniciar sesión</h2>
+        <p class="muted">Ingresa con tus credenciales institucionales.</p>
+        <form id="loginForm">
+          <label for="username">Usuario</label>
+          <div class="field"><i data-lucide="user"></i><input id="username" autocomplete="username" placeholder="Tu usuario" required></div>
+          <label for="password">Contraseña</label>
+          <div class="field"><i data-lucide="lock-keyhole"></i><input id="password" type="password" autocomplete="current-password" placeholder="Tu contraseña" required></div>
+          <button class="btn btn-primary full" type="submit">Ingresar al sistema <i data-lucide="arrow-right"></i></button>
+        </form>
+        <div class="security-note"><i data-lucide="shield-check"></i><span>Acceso institucional. La autenticación deberá conectarse al servidor antes de habilitar usuarios reales.</span></div>
+        <div class="login-school">I.E. 5074 Alcides Spelucín Vega</div>
+      </div>
+    </div>
+  </div>
 
-      <section class="main-grid">
-        <article class="panel scanner-panel">
-          <div class="panel-heading">
-            <div><span class="section-kicker">MÓDULO 01</span><h2>Escanear código QR</h2><p>Identificación rápida del estudiante</p></div>
-            <span class="heading-icon">▦</span>
-          </div>
-          <div class="scanner-frame">
-            <div class="scan-corner c1"></div><div class="scan-corner c2"></div>
-            <div class="scan-corner c3"></div><div class="scan-corner c4"></div>
-            <div id="reader-placeholder" class="scanner-placeholder">
-              <div class="qr-symbol">▦</div>
-              <strong>Escáner pendiente de conexión</strong>
-              <span>La cámara se activará cuando se complete la integración segura.</span>
-            </div>
-            <div id="reader" class="reader" hidden></div>
-          </div>
-          <button id="scan-button" class="btn btn-primary" disabled>Activar cámara y escanear</button>
-          <div class="result-card" aria-live="polite">
-            <div class="result-avatar" id="avatar">QR</div>
-            <div class="result-copy"><span class="section-kicker">RESULTADO DEL ESCANEO</span><strong id="nombre">Esperando conexión</strong><p id="mensaje">Aquí aparecerán los datos autorizados del estudiante.</p></div>
-            <span class="result-state" id="estado">SIN REGISTRO</span>
-          </div>
-          <p class="helper-text">La cámara requiere permiso del navegador y conexión HTTPS.</p>
-        </article>
+  <div id="appView" class="app-shell hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand sidebar-brand"><div class="brand-mark">A</div><div><b>ASISTENCIA QR</b><span>GESTIÓN ESCOLAR</span></div></div>
+      <div class="school-label">I.E. 5074 ALCIDES SPELUCÍN VEGA</div>
+      <div class="nav-caption">MENÚ PRINCIPAL</div>
+      <nav class="nav">
+        <button class="nav-item active" data-page="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</button>
+        <button class="nav-item" data-page="registro"><i data-lucide="scan-line"></i> Registrar asistencia</button>
+        <button class="nav-item" data-page="asistencias"><i data-lucide="clipboard-list"></i> Asistencias</button>
+        <button class="nav-item" data-page="estudiantes"><i data-lucide="users"></i> Estudiantes</button>
+        <button class="nav-item" data-page="docentes"><i data-lucide="graduation-cap"></i> Docentes</button>
+        <button class="nav-item" data-page="reportes"><i data-lucide="chart-no-axes-combined"></i> Reportes</button>
+      </nav>
+      <div class="nav-caption admin-caption">ADMINISTRACIÓN</div>
+      <nav class="nav">
+        <button class="nav-item" data-page="configuracion"><i data-lucide="settings"></i> Configuración</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><i data-lucide="life-buoy"></i><b>Centro de ayuda</b><span>Guía de uso del sistema</span></div>
+        <button class="profile" id="logoutBtn"><div class="avatar">AD</div><div><b>Administrador</b><span>Sesión de demostración</span></div><i data-lucide="log-out"></i></button>
+      </div>
+    </aside>
 
-        <article class="panel access-panel">
-          <div class="panel-heading">
-            <div><span class="section-kicker">MÓDULO 02</span><h2>Acceso al sistema</h2><p>Administración y personal docente</p></div>
-            <span class="heading-icon">⌑</span>
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn" aria-label="Abrir menú"><i data-lucide="menu"></i></button>
+        <div class="breadcrumb">Sistema <span>/</span> <b id="crumb">Dashboard</b></div>
+        <div class="top-actions"><span class="today" id="today"></span><button class="icon-btn" title="Notificaciones"><i data-lucide="bell"></i></button><div class="top-avatar">AD</div></div>
+      </header>
+
+      <section class="content">
+        <div class="page active" id="page-dashboard">
+          <div class="page-heading"><div><span class="eyebrow">RESUMEN INSTITUCIONAL</span><h1>Dashboard</h1><p>Vista general de la asistencia escolar.</p></div><div class="date-chip"><i data-lucide="calendar-days"></i><span id="dateLong"></span></div></div>
+          <div class="welcome-banner"><div><span class="eyebrow">I.E. 5074 ALCIDES SPELUCÍN VEGA</span><h2>¡Bienvenido al sistema de asistencia!</h2><p>Administra y consulta la información de asistencia desde un solo lugar.</p></div><div class="banner-icon"><i data-lucide="school"></i></div></div>
+          <div class="section-title"><h3>Indicadores de hoy</h3><span class="muted small">Datos de demostración · No conectados</span></div>
+          <div class="stats-grid">
+            <article class="stat-card"><div class="stat-top"><span>Estudiantes registrados</span><i class="stat-icon blue" data-lucide="users"></i></div><strong>395</strong><small><span class="dot blue-dot"></span> Padrón referencial</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Presentes</span><i class="stat-icon green" data-lucide="user-check"></i></div><strong>—</strong><small>Esperando conexión</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Tardanzas</span><i class="stat-icon amber" data-lucide="clock-3"></i></div><strong>—</strong><small>Esperando conexión</small></article>
+            <article class="stat-card"><div class="stat-top"><span>Faltas</span><i class="stat-icon red" data-lucide="user-x"></i></div><strong>—</strong><small>Esperando conexión</small></article>
           </div>
-          <form id="login-form">
-            <label for="usuario">Usuario institucional</label>
-            <input id="usuario" name="usuario" autocomplete="username" placeholder="Ingrese su usuario" disabled>
-            <label for="clave">Contraseña</label>
-            <input id="clave" name="clave" type="password" autocomplete="current-password" placeholder="Ingrese su contraseña" disabled>
-            <button class="btn btn-secondary" type="submit" disabled>Ingresar al sistema</button>
-          </form>
-          <div class="role-list">
-            <div class="role-item"><span class="role-badge admin">A</span><div><strong>Administrador</strong><small>Gestión general, reportes y configuración</small></div></div>
-            <div class="role-item"><span class="role-badge teacher">D</span><div><strong>Docente</strong><small>Consulta de su sección y asistencia</small></div></div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-heading"><div><h3>Asistencia por grado</h3><p>Resumen de los seis grados</p></div><span class="pill">Sin datos en vivo</span></div><div class="empty-chart"><div class="chart-placeholder"><i data-lucide="chart-column-increasing"></i><b>Panel pendiente de conexión</b><span>Los gráficos aparecerán cuando se conecte Google Sheets.</span></div></div></article>
+            <article class="panel"><div class="panel-heading"><div><h3>Accesos rápidos</h3><p>Funciones principales</p></div></div><div class="quick-links"><button data-goto="registro"><i data-lucide="scan-line"></i><span><b>Registrar asistencia</b><small>Escanear código QR</small></span><i data-lucide="chevron-right"></i></button><button data-goto="estudiantes"><i data-lucide="users"></i><span><b>Ver estudiantes</b><small>Consultar padrón escolar</small></span><i data-lucide="chevron-right"></i></button><button data-goto="reportes"><i data-lucide="file-bar-chart"></i><span><b>Generar reportes</b><small>Consultar información</small></span><i data-lucide="chevron-right"></i></button></div></article>
           </div>
-          <div class="secure-note"><span>◆</span> El inicio de sesión se habilitará con validación del lado del servidor. No se utilizan contraseñas de demostración.</div>
-        </article>
+          <div class="notice"><i data-lucide="info"></i><span><b>Modo de instalación:</b> esta interfaz es una plantilla visual. Las cifras reales, los accesos y los registros se habilitarán al completar la conexión segura con Apps Script.</span></div>
+        </div>
+
+        <div class="page" id="page-registro">
+          <div class="page-heading"><div><span class="eyebrow">CONTROL DIARIO</span><h1>Registrar asistencia</h1><p>Escanea el código QR del estudiante o ingresa su código.</p></div></div>
+          <div class="registration-layout">
+            <article class="panel scanner-panel"><div class="panel-heading"><div><h3>Escáner QR</h3><p>Registro de estudiantes</p></div><span class="status-tag pending">Pendiente de conexión</span></div><div class="scanner-box"><i data-lucide="scan-qr-code"></i><b>Escáner no habilitado</b><span>Se activará al conectar y autorizar el servicio de registro.</span></div><label for="studentCode">Código del estudiante</label><div class="field"><i data-lucide="qr-code"></i><input id="studentCode" placeholder="Ejemplo: ALU-1A-001"></div><button class="btn btn-primary full" id="testScan" type="button">Probar conexión</button><p class="form-hint" id="scanMessage">No se enviará ningún registro real desde esta versión visual.</p></article>
+            <article class="panel"><div class="panel-heading"><div><h3>Resultado del registro</h3><p>Información del estudiante</p></div></div><div class="student-empty"><div class="student-avatar"><i data-lucide="user-round"></i></div><b>Esperando escaneo</b><span>Los datos del estudiante aparecerán aquí después de validar el QR en el servidor.</span></div></article>
+          </div>
+        </div>
+
+        <div class="page" id="page-asistencias"><div class="page-heading"><div><span class="eyebrow">REGISTROS</span><h1>Asistencias</h1><p>Consulta de registros diarios de estudiantes.</p></div></div><div class="panel empty-state"><i data-lucide="clipboard-list"></i><h3>Registros pendientes de conexión</h3><p>La tabla de asistencias se mostrará cuando se conecte la base de datos institucional.</p></div></div>
+        <div class="page" id="page-estudiantes"><div class="page-heading"><div><span class="eyebrow">PADRÓN ESCOLAR</span><h1>Estudiantes</h1><p>Consulta del padrón de los seis grados y sus secciones.</p></div></div><div class="panel empty-state"><i data-lucide="users"></i><h3>Padrón pendiente de conexión</h3><p>El padrón de 395 estudiantes se cargará desde Google Sheets una vez configurada la API segura.</p></div></div>
+        <div class="page" id="page-docentes"><div class="page-heading"><div><span class="eyebrow">PERSONAL</span><h1>Docentes</h1><p>Administración de docentes y secciones asignadas.</p></div></div><div class="panel empty-state"><i data-lucide="graduation-cap"></i><h3>Listado pendiente de conexión</h3><p>Los datos de docentes se consultarán desde la hoja institucional correspondiente.</p></div></div>
+        <div class="page" id="page-reportes"><div class="page-heading"><div><span class="eyebrow">ANÁLISIS</span><h1>Reportes</h1><p>Informes por fecha, grado, sección y estudiante.</p></div></div><div class="panel empty-state"><i data-lucide="chart-no-axes-combined"></i><h3>Reportes pendientes de conexión</h3><p>Los filtros, porcentajes y exportaciones se habilitarán al conectar los registros reales.</p></div></div>
+        <div class="page" id="page-configuracion"><div class="page-heading"><div><span class="eyebrow">SISTEMA</span><h1>Configuración</h1><p>Parámetros generales de la plataforma.</p></div></div><div class="panel empty-state"><i data-lucide="settings"></i><h3>Configuración del servidor pendiente</h3><p>La zona horaria, horarios de ingreso y permisos se definirán antes de activar el registro.</p></div></div>
       </section>
-
-      <section class="panel data-panel">
-        <div class="panel-heading"><div><span class="section-kicker">MÓDULO 03</span><h2>Base de datos institucional</h2><p>Estructura conectada a Google Sheets</p></div></div>
-        <div class="data-tags"><span>ALUMNOS</span><span>DOCENTES</span><span>ASISTENCIA</span><span>USUARIOS</span><span>CONFIGURACIÓN</span></div>
-        <p class="data-caption">La base contempla 395 estudiantes distribuidos en 18 secciones. Los datos personales permanecen en la hoja institucional y no se publican en esta página.</p>
-      </section>
-      <footer><span>© I.E. 5074 Alcides Spelucín Vega</span><span>Sistema de Asistencia QR · Educación Primaria</span></footer>
+      <footer class="footer">© 2026 I.E. 5074 Alcides Spelucín Vega <span>·</span> Sistema de Asistencia QR</footer>
     </main>
   </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,51 +1,22 @@
-const $ = (id) => document.getElementById(id);
-if (window.lucide) lucide.createIcons();
-
-const loginView = $("loginView");
-const appView = $("appView");
-const toast = $("toast");
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  window.setTimeout(() => toast.classList.remove("show"), 3200);
+/* Módulo de escaneo QR compartido por el panel docente y administrador. */
+const API = "https://script.google.com/macros/s/AKfycbwZKYugFQQjO6sb9MLSkMhETq4v-nHqgYzs45J4tRdYWW3AGIThbmW2TAPl1xv7X8z-SQ/exec";
+let qrInstances = {}, scanLock = false;
+function showScanResult(targetId, data){
+ const target=document.getElementById(targetId); if(!target)return;
+ const labels={ASISTENCIA:"✓ Asistencia registrada",TARDANZA:"◷ Tardanza registrada",FALTA:"× Falta registrada",DUPLICADO:"! Registro duplicado", "FUERA DE HORARIO":"Fuera de horario","SIN CLASES":"Sin clases","NO ENCONTRADO":"Código no registrado"};
+ target.textContent=`${labels[data.estado]||data.estado||"Resultado"} · ${data.nombre||"Estudiante no identificado"}. ${data.mensaje||""}`;
+ target.className="scan-result "+(data.estado==="ASISTENCIA"?"success":data.estado==="FALTA"?"danger":"");
 }
-
-// Prototipo visual: no valida credenciales ni crea una sesión real.
-$("loginForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  showToast("Inicio de sesión aún no conectado. No se validaron credenciales.");
-});
-
-function openAppDemo() {
-  loginView.classList.add("hidden");
-  appView.classList.remove("hidden");
+async function registrarCodigoQR(codigo, targetId){
+ if(scanLock)return;scanLock=true;
+ try{const response=await fetch(`${API}?codigo=${encodeURIComponent(codigo)}`);if(!response.ok)throw Error("HTTP "+response.status);const data=await response.json();showScanResult(targetId,data);if(navigator.vibrate)navigator.vibrate(data.estado==="ASISTENCIA"?100:250);if(window.actualizarPanel)await window.actualizarPanel();}
+ catch(error){console.error(error);showScanResult(targetId,{estado:"ERROR",mensaje:"No se pudo conectar con el servidor. Verifica Internet y Apps Script."});}
+ finally{setTimeout(()=>scanLock=false,1600);}
 }
-function openLogin() {
-  appView.classList.add("hidden");
-  loginView.classList.remove("hidden");
-  $("password").value = "";
+async function startQRScanner(elementId,statusId,resultId){
+ if(typeof Html5Qrcode==="undefined"){const s=document.getElementById(statusId);if(s)s.textContent="No se cargó la biblioteca del escáner. Revisa tu conexión.";return;}
+ const status=document.getElementById(statusId);if(qrInstances[elementId]){status.textContent="La cámara ya está activa.";return;}
+ try{const scanner=new Html5Qrcode(elementId);qrInstances[elementId]=scanner;await scanner.start({facingMode:"environment"},{fps:10,qrbox:{width:230,height:230}},text=>registrarCodigoQR(text,resultId),()=>{});if(status)status.textContent="Cámara activa. Enfoca el código QR del estudiante.";}
+ catch(e){console.error(e);delete qrInstances[elementId];if(status)status.textContent="No se pudo iniciar la cámara. Permite el acceso y usa HTTPS.";}
 }
-function goTo(page) {
-  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  const target = $("page-" + page);
-  if (target) target.classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(btn => btn.classList.toggle("active", btn.dataset.page === page));
-  const active = document.querySelector(`.nav-item[data-page="${page}"]`);
-  $("crumb").textContent = active ? active.textContent.trim() : "Dashboard";
-  $("sidebar").classList.remove("open");
-  if (window.lucide) lucide.createIcons();
-}
-
-document.querySelectorAll(".nav-item").forEach(btn => btn.addEventListener("click", () => goTo(btn.dataset.page)));
-document.querySelectorAll("[data-goto]").forEach(btn => btn.addEventListener("click", () => goTo(btn.dataset.goto)));
-$("logoutBtn").addEventListener("click", openLogin);
-$("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
-$("testScan").addEventListener("click", () => {
-  showToast("Conexión pendiente: no se registró asistencia.");
-  $("scanMessage").textContent = "Servidor no conectado. No se modificó Google Sheets.";
-});
-
-const now = new Date();
-$("today").textContent = new Intl.DateTimeFormat("es-PE", { weekday:"short", day:"2-digit", month:"short" }).format(now);
-$("dateLong").textContent = new Intl.DateTimeFormat("es-PE", { weekday:"long", day:"numeric", month:"long", year:"numeric" }).format(now);
+window.API_ASISTENCIA=API;window.startQRScanner=startQRScanner;window.registrarCodigoQR=registrarCodigoQR;
